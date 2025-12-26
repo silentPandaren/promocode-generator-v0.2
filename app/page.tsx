@@ -5,17 +5,18 @@ import { useState } from 'react'
 export default function Home() {
   const [count, setCount] = useState<number>(10)
   const [length, setLength] = useState<number>(8)
+  const [uppercase, setUppercase] = useState<boolean>(false)
   const [promoCodes, setPromoCodes] = useState<string[]>([])
   const [isGenerating, setIsGenerating] = useState(false)
 
   // Генерация случайного промокода
-  const generatePromoCode = (len: number): string => {
+  const generatePromoCode = (len: number, toUpper: boolean): string => {
     const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
     let result = ''
     for (let i = 0; i < len; i++) {
       result += chars.charAt(Math.floor(Math.random() * chars.length))
     }
-    return result
+    return toUpper ? result.toUpperCase() : result
   }
 
   // Генерация уникальных промокодов
@@ -24,7 +25,7 @@ export default function Home() {
     const codes = new Set<string>()
     
     while (codes.size < count) {
-      codes.add(generatePromoCode(length))
+      codes.add(generatePromoCode(length, uppercase))
     }
     
     setPromoCodes(Array.from(codes))
@@ -68,7 +69,7 @@ export default function Home() {
           </h1>
 
           {/* Форма параметров */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
             <div>
               <label htmlFor="count" className="block text-sm font-medium text-gray-700 mb-2">
                 Количество промокодов
@@ -98,6 +99,21 @@ export default function Home() {
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
               />
             </div>
+          </div>
+
+          {/* Чекбокс для верхнего регистра */}
+          <div className="mb-8">
+            <label className="flex items-center cursor-pointer">
+              <input
+                type="checkbox"
+                checked={uppercase}
+                onChange={(e) => setUppercase(e.target.checked)}
+                className="w-5 h-5 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500 focus:ring-2"
+              />
+              <span className="ml-3 text-sm font-medium text-gray-700">
+                Перевести все символы в верхний регистр
+              </span>
+            </label>
           </div>
 
           {/* Кнопка генерации */}
