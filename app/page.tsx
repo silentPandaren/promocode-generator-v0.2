@@ -6,6 +6,7 @@ export default function Home() {
   const [count, setCount] = useState<number>(10)
   const [length, setLength] = useState<number>(8)
   const [uppercase, setUppercase] = useState<boolean>(false)
+  const [fileName, setFileName] = useState<string>('')
   const [promoCodes, setPromoCodes] = useState<string[]>([])
   const [isGenerating, setIsGenerating] = useState(false)
 
@@ -39,7 +40,8 @@ export default function Home() {
     const url = URL.createObjectURL(blob)
     const link = document.createElement('a')
     link.href = url
-    link.download = `promocodes_${count}_${length}_${Date.now()}.txt`
+    const defaultName = `promocodes_${count}_${length}_${Date.now()}.txt`
+    link.download = fileName.trim() ? `${fileName.trim()}.txt` : defaultName
     document.body.appendChild(link)
     link.click()
     document.body.removeChild(link)
@@ -53,7 +55,8 @@ export default function Home() {
     const url = URL.createObjectURL(blob)
     const link = document.createElement('a')
     link.href = url
-    link.download = `promocodes_${count}_${length}_${Date.now()}.csv`
+    const defaultName = `promocodes_${count}_${length}_${Date.now()}.csv`
+    link.download = fileName.trim() ? `${fileName.trim()}.csv` : defaultName
     document.body.appendChild(link)
     link.click()
     document.body.removeChild(link)
@@ -102,7 +105,7 @@ export default function Home() {
           </div>
 
           {/* Чекбокс для верхнего регистра */}
-          <div className="mb-8">
+          <div className="mb-6">
             <label className="flex items-center cursor-pointer">
               <input
                 type="checkbox"
@@ -114,6 +117,24 @@ export default function Home() {
                 Перевести все символы в верхний регистр
               </span>
             </label>
+          </div>
+
+          {/* Поле для названия файла */}
+          <div className="mb-8">
+            <label htmlFor="fileName" className="block text-sm font-medium text-gray-700 mb-2">
+              Название файла (необязательно)
+            </label>
+            <input
+              id="fileName"
+              type="text"
+              value={fileName}
+              onChange={(e) => setFileName(e.target.value)}
+              placeholder="Оставьте пустым для автоматического названия"
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+            />
+            <p className="mt-1 text-xs text-gray-500">
+              Если не указано, будет использовано автоматическое название
+            </p>
           </div>
 
           {/* Кнопка генерации */}
